@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "yarn lint:js && yarn lint:prettier",
+    "lint:js": "eslint --ext \".ts,.vue\" .",
+    "lint:prettier": "prettier --check .",
+    "lint:fix": "prettier --write --list-different . && yarn lint:js --fix"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-vue": "^9.18.1",
+    "nuxt": "^3.8.1",
+    "nuxt-icon": "^0.6.8",
+    "prettier": "^3.0.3",
+    "vue": "^3.3.8",
+    "vue-eslint-parser": "^9.3.2",
+    "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "@formkit/nuxt": "^1.5.3",
+    "@nuxtjs/tailwindcss": "^6.9.4",
+    "@pinia/nuxt": "^0.5.1",
+    "nuxt-graphql-client": "^0.2.33",
+    "pinia": "^2.1.7",
+    "sass": "^1.70.0"
+  },
+  "engines": {
+    "node": ">= 18.0.0",
+    "npm": ">= 7.0.0"
+  }
+}

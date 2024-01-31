@@ -1,0 +1,26 @@
+query getPublicTravels($limit: Int) {
+  publicTravels(limit: $limit) {
+    title
+    description
+    images
+    slug
+  }
+}
+
+query getTravels {
+  travels {
+    title
+    description
+    images
+    slug
+  }
+}
+
+query getTravelBySlug($slug: String!) {
+  travelBySlug(slug: $slug) {
+    title
+    description
+    images
+    slug
+  }
+}

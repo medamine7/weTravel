@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family: "Nunito", sans-serif;
+
+  --color-body-background: 255, 255, 255;
+  --color-footer-background: linear-gradient(to bottom, black, #164e63);
+
+  --color-brand: 254, 167, 89;
+  --color-brand-light: 255, 242, 228;
+  --color-brand-dark: 255, 127, 0;
+
+  --color-primary: var(--color-brand);
+  --color-secondary: 24, 26, 32;
+  --color-tertiary: 55, 65, 81;
+
+  --color-text-primary: 77, 77, 77;
+
+  --color-text-secondary: 255, 255, 255;
+  --color-text-tertiary: 191, 219, 254;
+
+  --color-loading-indicator-background: linear-gradient(
+    to right,
+    rgb(var(--color-brand-light)) 10%,
+    rgb(var(--color-brand)) 50%,
+    rgb(var(--color-brand-dark)) 90%
+  );
+}
