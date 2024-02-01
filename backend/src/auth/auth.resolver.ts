@@ -16,4 +16,9 @@ export class AuthResolver {
   login(@Args('loginUserInput') loginUserInput: LoginUserInput) {
     return this.authService.login(loginUserInput);
   }
+
+  @Mutation(() => Boolean)
+  logout() {
+    return this.authService.logout();
+  }
 }

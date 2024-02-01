@@ -5,6 +5,10 @@ import { Travel } from './entities/travel.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import slugify from 'slugify';
+import {
+  FindAllOptions,
+  FindOneOptions,
+} from './interfaces/travels-service.interface';
 
 @Injectable()
 export class TravelsService {
@@ -12,23 +16,58 @@ export class TravelsService {
 
   create(createTravelInput: CreateTravelInput): Promise<Travel> {
     const createdTravel = new this.travelModel(createTravelInput);
-    createdTravel.slug = slugify(createTravelInput.title, {
+    const timestamp = Date.now();
+    const toSlugify = `${createTravelInput.title}-${timestamp}`;
+
+    createdTravel.slug = slugify(toSlugify, {
       lower: true,
+      strict: true,
     });
 
     return createdTravel.save();
   }
 
-  findAll(): Promise<Travel[]> {
-    return this.travelModel.find().exec();
+  findAll(options?: FindAllOptions): Promise<Travel[]> {
+    const { publicOnly, limit } = options || {};
+
+    let query = this.travelModel.find();
+
+    if (publicOnly) {
+      query = query.where({ public: true });
+    }
+
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+
+    return query.exec();
   }
 
-  findOne(id: string): Promise<Travel> {
-    return this.travelModel.findById(id).exec();
+  findOne(id: string, options?: FindOneOptions): Promise<Travel> {
+    const { publicOnly } = options || {};
+
+    let query = this.travelModel.findById(id);
+
+    if (publicOnly) {
+      query = query.where({ public: true });
+    }
+
+    return query.exec();
   }
 
-  async findBySlug(slug: string): Promise<Travel | null> {
-    return this.travelModel.findOne({ slug }).exec();
+  async findBySlug(
+    slug: string,
+    options?: FindOneOptions,
+  ): Promise<Travel | null> {
+    const { publicOnly } = options || {};
+
+    let query = this.travelModel.findOne({ slug });
+
+    if (publicOnly) {
+      query = query.where({ public: true });
+    }
+
+    return query.exec();
   }
 
   update(id: string, updateTravelInput: UpdateTravelInput): Promise<Travel> {
@@ -37,16 +76,6 @@ export class TravelsService {
 
   remove(id: string): Promise<Travel> {
     return this.travelModel.findByIdAndDelete(id).exec();
-  }
-
-  findPublic({ limit }: { limit?: number }): Promise<Travel[]> {
-    let query = this.travelModel.find({ public: true });
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    return query.exec();
   }
 
   addTour(travelId: string, tourId: string): Promise<Travel> {

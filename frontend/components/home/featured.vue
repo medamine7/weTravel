@@ -18,18 +18,18 @@
 
 <script lang="ts" setup>
   const { data: travels } = await useAsyncGql({
-    operation: "getPublicTravels",
+    operation: "getTravels",
     variables: {
       limit: 6,
     },
     options: {
       transform: (data) =>
-        data.publicTravels.map((item) => ({
+        data.travels.map((item) => ({
           title: item.title,
           subtitle: item.description,
           slug: item.slug,
           image: {
-            src: item.images[0],
+            src: item.images,
             alt: item.title,
           },
         })),

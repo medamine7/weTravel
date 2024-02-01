@@ -8,6 +8,7 @@
         name="email"
         validation="required|email"
         placeholder="name@example.com"
+        validation-visibility="submit"
       />
 
       <FormKit
@@ -19,6 +20,7 @@
         suffix-icon="eyeClosed"
         @suffix-icon-click="handleIconClick"
         suffix-icon-class="hover:text-blue-500"
+        validation-visibility="submit"
       />
     </FormKit>
   </div>

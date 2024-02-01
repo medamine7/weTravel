@@ -27,6 +27,10 @@ export class User {
   @Prop()
   role: Role;
 
+  @Field(() => String)
+  @Prop()
+  refreshToken: string;
+
   // for easier access to the id (virtual property)
   @Field(() => String)
   id: string;

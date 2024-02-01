@@ -1,11 +1,11 @@
 <template>
   <button
     kind="button"
-    class="font-bold rounded-lg focus:outline-none flex justify-center items-center gap-3"
+    class="font-bold rounded-lg focus:outline-none flex justify-center items-center gap-3 text-sm"
     :class="classes"
     v-bind="$attrs"
   >
-    <FormKitIcon v-if="icon" :icon="icon" class="w-6" />
+    <Icon v-if="icon" :name="icon" :size="iconSize" />
     <span v-if="$slots.default">
       <slot />
     </span>
@@ -19,12 +19,13 @@
   interface Props extends /** @vue-ignore */ ButtonHTMLAttributes {
     icon?: string;
     kind?: "primary" | "secondary";
+    iconSize?: string;
   }
 
   const props = withDefaults(defineProps<Props>(), {
     kind: "primary",
     icon: undefined,
-    iconSize: "md",
+    iconSize: "24px",
   });
 
   const $slots = useSlots();
@@ -37,11 +38,11 @@
     }
 
     if (props.kind === "secondary") {
-      classes.push("bg-transparent rounded-lg border-2 border-gray-500");
+      classes.push("bg-gray-100 hover:bg-gray-300");
     }
 
     if ($slots.default) {
-      classes.push("px-5 py-2.5 ");
+      classes.push("px-5 py-2 ");
     } else {
       classes.push("p-1");
     }

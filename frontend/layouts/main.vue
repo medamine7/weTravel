@@ -1,6 +1,6 @@
 <template>
   <layout-navbar />
-  <main class="w-full">
+  <main class="w-full flex-1">
     <slot />
   </main>
 </template>

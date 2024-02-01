@@ -47,6 +47,6 @@ export default {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
   darkMode: "class",
 };

@@ -1,14 +1,5 @@
-query getPublicTravels($limit: Int) {
-  publicTravels(limit: $limit) {
-    title
-    description
-    images
-    slug
-  }
-}
-
-query getTravels {
-  travels {
+query getTravels($limit: Int) {
+  travels(limit: $limit) {
     title
     description
     images

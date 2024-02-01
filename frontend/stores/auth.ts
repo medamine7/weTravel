@@ -13,6 +13,7 @@ export const useAuthStore = defineStore("auth", {
   }),
   getters: {
     isLoggedIn: (state) => !!state.token,
+    userRole: (state) => state.user?.role,
   },
   actions: {
     updateAuth(data: Partial<AuthState>) {
@@ -23,6 +24,8 @@ export const useAuthStore = defineStore("auth", {
     },
   },
   persist: {
-    storage: persistedState.sessionStorage,
+    storage: persistedState.cookiesWithOptions({
+      secure: process.env.NODE_ENV === "production",
+    }),
   },
 });

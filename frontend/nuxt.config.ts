@@ -13,11 +13,6 @@ export default defineNuxtConfig({
     autoImport: true,
     configFile: "./formkit.config.ts",
   },
-  runtimeConfig: {
-    public: {
-      GQL_HOST: "",
-    },
-  },
   devServer: {
     port: 3001,
   },

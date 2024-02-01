@@ -10,7 +10,7 @@ interface Permissions {
 }
 
 export function hasPermission(
-  userRole: UserRole,
+  userRole: UserRole | undefined,
   resource: Resource,
   action: Action,
 ): boolean {
@@ -20,6 +20,10 @@ export function hasPermission(
       [UserRole.ADMIN]: ["read", "write", "delete"],
     },
   };
+
+  if (!userRole) {
+    return false;
+  }
 
   if (!permissions[resource] || !permissions[resource][userRole]) {
     return false;

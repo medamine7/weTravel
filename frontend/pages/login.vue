@@ -20,24 +20,29 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import type { UserRole } from "~/types/user";
+
+  interface FormData {
+    email: string;
+    password: string;
+  }
+
   const errors = ref<string[]>([]);
   const authStore = useAuthStore();
 
   const setUserData = async (token: string) => {
     const { whoAmI: user } = await GqlWhoAmI();
     authStore.updateAuth({
-      user,
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role as UserRole,
+      },
       token,
     });
   };
 
-  const onLogin = ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => {
+  const onLogin = ({ email, password }: FormData) => {
     errors.value = [];
 
     GqlLogin({

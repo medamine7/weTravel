@@ -38,6 +38,10 @@ export class Travel {
   @Field(() => [Tour], { nullable: 'items' })
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Tour' }] })
   tours?: Tour[] | MongooseSchema.Types.ObjectId[];
+
+  // for easier access to the id (virtual property)
+  @Field(() => String)
+  id: string;
 }
 
 export const TravelSchema = SchemaFactory.createForClass(Travel);

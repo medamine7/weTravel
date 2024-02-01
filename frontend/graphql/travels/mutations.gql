@@ -1,0 +1,11 @@
+mutation CreateTravel($input: CreateTravelInput!) {
+  createTravel(createTravelInput: $input) {
+    id
+    title
+    duration
+    description
+    public
+    slug
+    images
+  }
+}

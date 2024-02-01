@@ -32,6 +32,10 @@ export class AuthService {
     };
   }
 
+  async logout() {
+    return true;
+  }
+
   async validateUser(loginUserInput: LoginUserInput) {
     const user = await this.userService.findByEmail(loginUserInput.email);
 

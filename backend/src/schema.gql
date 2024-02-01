@@ -20,6 +20,7 @@ type Travel {
   slug: String!
   public: Boolean!
   tours: [Tour]!
+  id: String!
 }
 
 type User {
@@ -28,6 +29,7 @@ type User {
   email: String!
   password: String!
   role: String!
+  refreshToken: String!
   id: String!
 }
 
@@ -36,8 +38,7 @@ type LoginUserResponse {
 }
 
 type Query {
-  travels: [Travel!]!
-  publicTravels(limit: Int): [Travel!]!
+  travels(limit: Int): [Travel!]!
   travel(id: String!): Travel!
   travelBySlug(slug: String!): Travel
   tours: [Tour!]!
@@ -58,6 +59,7 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
+  logout: Boolean!
 }
 
 input CreateTravelInput {

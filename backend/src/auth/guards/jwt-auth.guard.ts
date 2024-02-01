@@ -16,16 +16,18 @@ export class JWTAuthGuard extends AuthGuard('jwt') {
     return ctx.getContext().req;
   }
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  handleRequest(err, user, info, context) {
     const isPublic = this.reflector.getAllAndOverride<boolean>(
       PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
+
+    if (user) return user;
+
     if (isPublic) {
       return true;
     }
-    return super.canActivate(context);
+
+    return super.handleRequest(err, user, info, context);
   }
 }

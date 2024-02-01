@@ -12,6 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { TravelsController } from './travels/travels.controller';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -68,5 +70,6 @@ import { RolesGuard } from './auth/guards/roles.guard';
       useClass: RolesGuard,
     },
   ],
+  controllers: [AppController, TravelsController],
 })
 export class AppModule {}
