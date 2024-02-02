@@ -27,7 +27,12 @@
     </div>
   </x-container>
   <x-drawer v-if="canCreate">
-    <travel-creation-form @submit="onCreate" />
+    <travel-form @submit="onCreate">
+      <template v-slot:header>
+        <Icon name="maki:beach" />
+        <span class="ml-2"> Create a new travel </span>
+      </template>
+    </travel-form>
   </x-drawer>
 </template>
 
@@ -40,8 +45,8 @@
     title: string;
     description: string;
     duration: number;
-    isPublic: boolean;
-    images: File[];
+    public: boolean;
+    images: string[] | File[];
   }
 
   const authState = useAuthStore();
@@ -60,7 +65,7 @@
           subtitle: item.description,
           slug: item.slug,
           image: {
-            src: item.images[0],
+            src: item.images[0]?.url,
             alt: item.title,
           },
         })),
@@ -69,17 +74,30 @@
 
   const onCreate = async (payload: CreatePayload) => {
     const images = await $api.travels.uploadFiles({
-      files: payload.images,
+      files: payload.images as File[],
     });
 
-    GqlCreateTravel({
+    const { createTravel: newTravel } = await GqlCreateTravel({
       input: {
         title: payload.title,
         description: payload.description,
-        public: payload.isPublic,
+        public: payload.public,
         duration: payload.duration,
         images,
       },
     });
+
+    travels.value.push({
+      title: newTravel.title,
+      subtitle: newTravel.description,
+      slug: newTravel.slug,
+      image: {
+        src: newTravel.images[0].url,
+        alt: newTravel.title,
+      },
+    });
+
+    const drawer = FlowbiteInstances.getInstance("Drawer", "wt-drawer");
+    drawer.hide();
   };
 </script>

@@ -2,16 +2,25 @@ query getTravels($limit: Int) {
   travels(limit: $limit) {
     title
     description
-    images
+    images {
+      url
+      originalname
+    }
     slug
   }
 }
 
 query getTravelBySlug($slug: String!) {
   travelBySlug(slug: $slug) {
+    id
     title
     description
-    images
+    images {
+      url
+      originalname
+    }
     slug
+    duration
+    public
   }
 }

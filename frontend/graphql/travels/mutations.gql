@@ -6,6 +6,16 @@ mutation CreateTravel($input: CreateTravelInput!) {
     description
     public
     slug
-    images
+    images {
+      url
+      originalname
+      filename
+    }
+  }
+}
+
+mutation RemoveTravel($id: ID!) {
+  removeTravel(id: $id) {
+    id
   }
 }

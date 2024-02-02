@@ -3,6 +3,18 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Tour } from 'src/tours/entities/tour.entity';
 
+@ObjectType()
+export class ImageFile {
+  @Field()
+  url: string;
+
+  @Field()
+  filename: string;
+
+  @Field()
+  originalname: string;
+}
+
 export type TravelDocument = HydratedDocument<Travel>;
 
 @Schema()
@@ -23,9 +35,9 @@ export class Travel {
   @Prop()
   duration: number;
 
-  @Field(() => [String])
-  @Prop([String])
-  images: string[];
+  @Field(() => [ImageFile])
+  @Prop({ type: [ImageFile] })
+  images: ImageFile[];
 
   @Field(() => String)
   @Prop({ unique: true })

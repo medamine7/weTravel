@@ -8,12 +8,12 @@ export default (client: AxiosInstance) => ({
     files,
   }: UploadFilesPayload): Promise<UploadFilesResponse> => {
     const formData = new FormData();
-    const payload = files.map((item) => {
-      formData.append("images", item);
-      return item.name;
+
+    files.forEach((file) => {
+      formData.append("images", file);
     });
 
-    return client.post(`${resource}/upload`, payload).then((res) => {
+    return client.post(`${resource}/upload`, formData).then((res) => {
       return res.data;
     });
   },

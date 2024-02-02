@@ -20,6 +20,17 @@
   </div>
 </template>
 <script lang="ts" setup>
+  definePageMeta({
+    middleware: [
+      function () {
+        const authStore = useAuthStore();
+        if (authStore.isLoggedIn) {
+          return navigateTo("/");
+        }
+      },
+    ],
+  });
+
   import type { UserRole } from "~/types/user";
 
   interface FormData {

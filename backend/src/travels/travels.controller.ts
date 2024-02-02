@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Req,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -8,6 +9,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { getExternalFileUrl } from 'src/utils/file';
 
 @Controller('travels')
 @Public()
@@ -27,7 +29,14 @@ export class TravelsController {
       }),
     }),
   )
-  async uploadFile(@UploadedFiles() files: Express.Multer.File[]) {
-    return files.map((file) => file.filename);
+  async uploadFile(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Req() request,
+  ) {
+    return files.map((file) => ({
+      filename: file.filename,
+      url: getExternalFileUrl(request, file.filename),
+      originalname: file.originalname,
+    }));
   }
 }

@@ -8,6 +8,12 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "nuxt-icon",
   ],
+  runtimeConfig: {
+    public: {
+      REST_HOST: "",
+      GRAPHQL_HOST: "",
+    },
+  },
   formkit: {
     // Experimental support for auto loading (see note):
     autoImport: true,

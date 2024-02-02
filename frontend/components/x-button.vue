@@ -18,7 +18,7 @@
 
   interface Props extends /** @vue-ignore */ ButtonHTMLAttributes {
     icon?: string;
-    kind?: "primary" | "secondary";
+    kind?: "primary" | "secondary" | "danger";
     iconSize?: string;
   }
 
@@ -34,11 +34,15 @@
     const classes = [];
 
     if (props.kind === "primary") {
-      classes.push("text-white bg-primary focus:ring-brand-light");
+      classes.push("text-white bg-primary hover:bg-brand-dark");
     }
 
     if (props.kind === "secondary") {
-      classes.push("bg-gray-100 hover:bg-gray-300");
+      classes.push("bg-gray-100 hover:bg-gray-300 text-primary");
+    }
+
+    if (props.kind === "danger") {
+      classes.push("bg-red-500 hover:bg-red-600 text-white");
     }
 
     if ($slots.default) {

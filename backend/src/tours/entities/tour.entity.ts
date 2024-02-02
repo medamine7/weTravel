@@ -29,6 +29,10 @@ export class Tour {
   @Field(() => ID)
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Travel' })
   travelId: MongooseSchema.Types.ObjectId;
+
+  // for easier access to the id (virtual property)
+  @Field(() => String)
+  id: string;
 }
 
 export const TourSchema = SchemaFactory.createForClass(Tour);

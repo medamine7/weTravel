@@ -5,7 +5,7 @@
     <img
       v-for="(item, index) in images.slice(0, 4)"
       :key="index"
-      :src="item"
+      :src="item.url"
       class="w-full h-full object-cover"
       :class="{
         'col-span-2 row-span-2': index === 0,
@@ -17,6 +17,10 @@
 
 <script lang="ts" setup>
   defineProps<{
-    images: string[];
+    images: {
+      url: string;
+      filename?: string;
+      originalname?: string;
+    }[];
   }>();
 </script>

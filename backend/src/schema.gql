@@ -9,6 +9,13 @@ type Tour {
   to: String!
   price: Int!
   travelId: ID!
+  id: String!
+}
+
+type ImageFile {
+  url: String!
+  filename: String!
+  originalname: String!
 }
 
 type Travel {
@@ -16,7 +23,7 @@ type Travel {
   title: String!
   description: String!
   duration: Int!
-  images: [String!]!
+  images: [ImageFile!]!
   slug: String!
   public: Boolean!
   tours: [Tour]!
@@ -51,10 +58,10 @@ type Query {
 type Mutation {
   createTravel(createTravelInput: CreateTravelInput!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
-  removeTravel(id: Int!): Travel!
+  removeTravel(id: ID!): Travel!
   createTour(createTourInput: CreateTourInput!): Tour!
   updateTour(updateTourInput: UpdateTourInput!): Tour!
-  removeTour(id: Int!): Tour!
+  removeTour(id: ID!): Tour!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
@@ -72,11 +79,17 @@ input CreateTravelInput {
   """Travel duration"""
   duration: Int!
 
-  """Travel images"""
-  images: [String!]!
+  """Travel UploadedImages"""
+  images: [UploadedImage!]!
 
   """Travel public"""
   public: Boolean!
+}
+
+input UploadedImage {
+  url: String!
+  filename: String!
+  originalname: String!
 }
 
 input UpdateTravelInput {
@@ -89,8 +102,8 @@ input UpdateTravelInput {
   """Travel duration"""
   duration: Int
 
-  """Travel images"""
-  images: [String!]
+  """Travel UploadedImages"""
+  images: [UploadedImage!]
 
   """Travel public"""
   public: Boolean

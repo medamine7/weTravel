@@ -1,0 +1,14 @@
+mutation CreateTour($input: CreateTourInput!) {
+  createTour(createTourInput: $input) {
+    title
+    from
+    to
+    travelId
+  }
+}
+
+mutation RemoveTour($id: ID!) {
+  removeTour(id: $id) {
+    id
+  }
+}

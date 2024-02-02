@@ -29,7 +29,7 @@
           subtitle: item.description,
           slug: item.slug,
           image: {
-            src: item.images,
+            src: item.images[0]?.url,
             alt: item.title,
           },
         })),
