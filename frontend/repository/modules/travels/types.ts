@@ -1,8 +1,4 @@
-interface UploadedImage {
-  url: string;
-  filename: string;
-  originalname: string;
-}
+import type { UploadedImage } from "~/types/file";
 
 export interface UploadFilesPayload {
   files: File[];

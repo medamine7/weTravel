@@ -69,6 +69,8 @@
 </template>
 
 <script setup lang="ts">
+  import type { UploadedImage } from "~/types/file";
+
   definePageMeta({
     layout: "main",
   });
@@ -85,7 +87,7 @@
   const authState = useAuthStore();
   const { $api } = useNuxtApp();
 
-  const { data } = await useAsyncGql({
+  const { data, refresh } = await useAsyncGql({
     operation: "getTravelBySlug",
     variables: {
       slug: route.params.slug as string,
@@ -100,29 +102,30 @@
   );
 
   const onEdit = async (payload: EditPayload) => {
-    // const images = await $api.travels.uploadFiles({
-    //   files: payload.images,
-    // });
-    // const { createTravel: newTravel } = await GqlCreateTravel({
-    //   input: {
-    //     title: payload.title,
-    //     description: payload.description,
-    //     public: payload.isPublic,
-    //     duration: payload.duration,
-    //     images,
-    //   },
-    // });
-    // travels.value.push({
-    //   title: newTravel.title,
-    //   subtitle: newTravel.description,
-    //   slug: newTravel.slug,
-    //   image: {
-    //     src: newTravel.images[0],
-    //     alt: newTravel.title,
-    //   },
-    // });
-    // const drawer = FlowbiteInstances.getInstance("Drawer", "wt-drawer");
-    // drawer.hide();
+    const hasNewImages = payload.images?.some(Boolean);
+    let images: UploadedImage[] = [];
+
+    if (hasNewImages) {
+      images = await $api.travels.uploadFiles({
+        files: payload.images as File[],
+      });
+    }
+
+    const { updateTravel: updatedTravel } = await GqlUpdateTravel({
+      input: {
+        id: data.value!.id,
+        title: payload.title,
+        description: payload.description,
+        public: payload.isPublic,
+        duration: payload.duration,
+        ...(images.length && { images }),
+      },
+    });
+
+    refresh();
+
+    const drawer = FlowbiteInstances.getInstance("Drawer", "wt-drawer");
+    drawer.hide();
   };
 
   const onDelete = async () => {

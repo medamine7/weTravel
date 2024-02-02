@@ -14,6 +14,22 @@ mutation CreateTravel($input: CreateTravelInput!) {
   }
 }
 
+mutation UpdateTravel($input: UpdateTravelInput!) {
+  updateTravel(updateTravelInput: $input) {
+    id
+    title
+    duration
+    description
+    public
+    slug
+    images {
+      url
+      originalname
+      filename
+    }
+  }
+}
+
 mutation RemoveTravel($id: ID!) {
   removeTravel(id: $id) {
     id

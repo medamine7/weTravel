@@ -80,7 +80,7 @@ input CreateTravelInput {
   duration: Int!
 
   """Travel UploadedImages"""
-  images: [UploadedImage!]!
+  UploadedImages: [UploadedImage!]!
 
   """Travel public"""
   public: Boolean!
@@ -103,11 +103,11 @@ input UpdateTravelInput {
   duration: Int
 
   """Travel UploadedImages"""
-  images: [UploadedImage!]
+  UploadedImages: [UploadedImage!]
 
   """Travel public"""
   public: Boolean
-  id: Int!
+  id: ID!
 }
 
 input CreateTourInput {

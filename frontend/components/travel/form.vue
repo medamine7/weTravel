@@ -33,6 +33,7 @@
       validation="required|min:4"
       validation-visibility="submit"
       accept=".png, .jpeg, .jpg"
+      :value="defaultValues.images"
     />
 
     <label for="quantity-input" class="block text-sm font-bold text-gray-90"
@@ -51,6 +52,8 @@
 </template>
 
 <script lang="ts" setup>
+  import type { UploadedImage } from "#gql";
+
   interface FormFile {
     file: File;
     url: string;
@@ -65,7 +68,7 @@
   }
 
   type Data = Omit<Payload, "images"> & {
-    images: string[];
+    images: UploadedImage[];
   };
 
   interface Props {
@@ -85,7 +88,10 @@
   const defaultValues = {
     title: props.data?.title ?? "",
     description: props.data?.description ?? "",
-    images: props.data?.images.map((url) => ({ file: null, url })) ?? [],
+    images:
+      props.data?.images.map((image) => ({
+        name: image.originalname,
+      })) ?? [],
     duration: props.data?.duration ?? 1,
     public: props.data?.public ?? false,
   };

@@ -5,6 +5,7 @@ query getTravels($limit: Int) {
     images {
       url
       originalname
+      filename
     }
     slug
   }
@@ -18,6 +19,7 @@ query getTravelBySlug($slug: String!) {
     images {
       url
       originalname
+      filename
     }
     slug
     duration

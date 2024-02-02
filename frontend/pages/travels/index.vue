@@ -1,5 +1,5 @@
 <template>
-  <x-container class="mt-16">
+  <x-container class="mt-16 flex flex-col flex-1">
     <div class="flex justify-between items-center mb-12">
       <h1 class="text-4xl font-bold">What's your next destination?</h1>
       <x-button
@@ -25,6 +25,8 @@
         <x-card :item="item" />
       </nuxt-link>
     </div>
+
+    <x-pagination class="m-auto mb-0" />
   </x-container>
   <x-drawer v-if="canCreate">
     <travel-form @submit="onCreate">
