@@ -5,10 +5,13 @@ import { Travel } from './entities/travel.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import slugify from 'slugify';
+import { faker } from '@faker-js/faker';
+
 import {
   FindAllOptions,
   FindOneOptions,
 } from './interfaces/travels-service.interface';
+import { getExternalFileUrl } from 'src/utils/file';
 
 @Injectable()
 export class TravelsService {
@@ -16,13 +19,8 @@ export class TravelsService {
 
   create(createTravelInput: CreateTravelInput): Promise<Travel> {
     const createdTravel = new this.travelModel(createTravelInput);
-    const timestamp = Date.now();
-    const toSlugify = `${createTravelInput.title}-${timestamp}`;
 
-    createdTravel.slug = slugify(toSlugify, {
-      lower: true,
-      strict: true,
-    });
+    createdTravel.slug = this.slugify(createdTravel.title);
 
     return createdTravel.save();
   }
@@ -90,5 +88,46 @@ export class TravelsService {
         { new: true },
       )
       .exec();
+  }
+
+  seed({ request }) {
+    const travels = Array.from({ length: 30 }, (_, index) => {
+      const title = faker.location.country();
+      const description = faker.commerce.productDescription();
+      const isPublic = faker.datatype.boolean();
+      const duration = faker.number.int({ min: 1, max: 30 });
+      const slug = this.slugify(`${title}-${index}`);
+      const images = Array.from({ length: 4 }, () => {
+        const num = faker.number.int({ min: 1, max: 10 });
+        const file = num + '.jpg';
+
+        return {
+          url: getExternalFileUrl(request, file),
+          filename: file,
+          originalname: file,
+        };
+      });
+
+      return {
+        title,
+        description,
+        public: isPublic,
+        duration,
+        slug,
+        tours: [],
+        images,
+      };
+    });
+
+    return this.travelModel.insertMany(travels);
+  }
+
+  private slugify(string: string) {
+    const timestamp = Date.now();
+    const toSlugify = `${string}-${timestamp}`;
+    return slugify(toSlugify, {
+      lower: true,
+      strict: true,
+    });
   }
 }

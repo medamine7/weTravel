@@ -1,6 +1,7 @@
 FROM node:18-alpine as builder
 
 ARG GQL_HOST
+ARG GQL_CLIENT_HOST
 
 WORKDIR /app
 

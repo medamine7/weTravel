@@ -1,8 +1,10 @@
 FROM node:18-alpine as builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package.json yarn.lock ./
+
+COPY uploads ./uploads
 
 RUN yarn install
 
@@ -12,13 +14,14 @@ RUN yarn build
 
 FROM node:18-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package.json yarn.lock ./
 
 RUN yarn install --production
 
-COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/uploads ./uploads
 
 EXPOSE 3000
 

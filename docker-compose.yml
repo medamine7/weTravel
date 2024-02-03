@@ -6,12 +6,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        GQL_HOST: "/graphql"
+        GQL_HOST: "http://nginx:80/graphql"
+        GQL_CLIENT_HOST: "/graphql"
     ports:
       - 8000:3000
     environment:
       PORT: 8000
-      GQL_HOST: "/graphql"
       NUXT_PUBLIC_REST_HOST: "/api"
 
     networks:

@@ -26,7 +26,7 @@
       </nuxt-link>
     </div>
 
-    <x-pagination class="m-auto mb-0" />
+    <x-pagination class="m-auto mb-0 top-5" />
   </x-container>
   <x-drawer v-if="canCreate">
     <travel-form @submit="onCreate">
