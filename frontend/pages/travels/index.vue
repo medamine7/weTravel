@@ -18,7 +18,7 @@
       class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-12"
     >
       <nuxt-link
-        v-for="(item, index) in travels"
+        v-for="(item, index) in travels.items"
         :key="index"
         :to="`/travels/${item.slug}`"
       >
@@ -26,7 +26,13 @@
       </nuxt-link>
     </div>
 
-    <x-pagination class="m-auto mb-0 top-5" />
+    <x-pagination
+      class="m-auto mb-0 mt-24"
+      :limit="limit"
+      :count="travels.count"
+      :skip="skip"
+      @change="updatePage"
+    />
   </x-container>
   <x-drawer v-if="canCreate">
     <travel-form @submit="onCreate">
@@ -58,11 +64,19 @@
     hasPermission(authState.userRole, "travels", "write"),
   );
 
+  const limit = ref(10);
+  const skip = ref(0);
+
   const { data: travels } = await useAsyncGql({
     operation: "getTravels",
+    variables: {
+      limit: limit,
+      skip: skip,
+    },
     options: {
-      transform: (data) =>
-        data.travels.map((item) => ({
+      transform: (data) => ({
+        count: data.travels.count,
+        items: data.travels.items.map((item) => ({
           title: item.title,
           subtitle: item.description,
           slug: item.slug,
@@ -71,6 +85,7 @@
             alt: item.title,
           },
         })),
+      }),
     },
   });
 
@@ -89,7 +104,7 @@
       },
     });
 
-    travels.value.push({
+    travels.value.items.unshift({
       title: newTravel.title,
       subtitle: newTravel.description,
       slug: newTravel.slug,
@@ -101,5 +116,9 @@
 
     const drawer = FlowbiteInstances.getInstance("Drawer", "wt-drawer");
     drawer.hide();
+  };
+
+  const updatePage = (newSkip: number) => {
+    skip.value = newSkip;
   };
 </script>

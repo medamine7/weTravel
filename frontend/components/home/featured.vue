@@ -24,7 +24,7 @@
     },
     options: {
       transform: (data) =>
-        data.travels.map((item) => ({
+        data.travels.items.map((item) => ({
           title: item.title,
           subtitle: item.description,
           slug: item.slug,

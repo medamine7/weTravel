@@ -51,6 +51,10 @@ export class Travel {
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Tour' }] })
   tours?: Tour[] | MongooseSchema.Types.ObjectId[];
 
+  @Field(() => Date)
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
+
   // for easier access to the id (virtual property)
   @Field(() => String)
   id: string;

@@ -24,7 +24,7 @@ export class CreateTravelInput {
   duration: number;
 
   @Field(() => [UploadedImage], { description: 'Travel UploadedImages' })
-  UploadedImages: UploadedImage[];
+  images: UploadedImage[];
 
   @Field(() => Boolean, { description: 'Travel public' })
   public?: boolean;

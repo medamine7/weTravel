@@ -1,13 +1,17 @@
-query getTravels($limit: Int) {
-  travels(limit: $limit) {
-    title
-    description
-    images {
-      url
-      originalname
-      filename
+query getTravels($limit: Int, $skip: Int) {
+  travels(limit: $limit, skip: $skip) {
+    items {
+      id
+      title
+      description
+      images {
+        url
+        originalname
+        filename
+      }
+      slug
     }
-    slug
+    count
   }
 }
 

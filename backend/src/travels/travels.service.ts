@@ -9,6 +9,7 @@ import { faker } from '@faker-js/faker';
 
 import {
   FindAllOptions,
+  FindAllResponse,
   FindOneOptions,
 } from './interfaces/travels-service.interface';
 import { getExternalFileUrl } from 'src/utils/file';
@@ -25,10 +26,10 @@ export class TravelsService {
     return createdTravel.save();
   }
 
-  findAll(options?: FindAllOptions): Promise<Travel[]> {
-    const { publicOnly, limit } = options || {};
+  async findAll(options?: FindAllOptions): Promise<FindAllResponse> {
+    const { publicOnly, limit, skip } = options || {};
 
-    let query = this.travelModel.find();
+    let query = this.travelModel.find().sort({ createdAt: -1 });
 
     if (publicOnly) {
       query = query.where({ public: true });
@@ -38,7 +39,17 @@ export class TravelsService {
       query = query.limit(limit);
     }
 
-    return query.exec();
+    if (skip != null) {
+      query = query.skip(skip);
+    }
+
+    const items = await query.exec();
+    const count = await this.getCount(publicOnly ? { public: true } : {});
+
+    return {
+      items,
+      count,
+    };
   }
 
   findOne(id: string, options?: FindOneOptions): Promise<Travel> {
@@ -74,6 +85,10 @@ export class TravelsService {
 
   remove(id: string): Promise<Travel> {
     return this.travelModel.findByIdAndDelete(id).exec();
+  }
+
+  private getCount(filter: any) {
+    return this.travelModel.countDocuments(filter).exec();
   }
 
   addTour(travelId: string, tourId: string): Promise<Travel> {

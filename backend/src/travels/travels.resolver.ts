@@ -8,6 +8,7 @@ import { Role } from 'src/constants/roles.enum';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
+import { FindAllResponse } from './dto/find-travels.response';
 
 @Resolver(() => Travel)
 @Roles(Role.ADMIN)
@@ -22,16 +23,18 @@ export class TravelsResolver {
   }
 
   @Public()
-  @Query(() => [Travel], { name: 'travels' })
+  @Query(() => FindAllResponse, { name: 'travels' })
   findAll(
     @CurrentUser() user: User,
     @Args('limit', { type: () => Int, nullable: true }) limit: number,
+    @Args('skip', { type: () => Int, nullable: true }) skip: number,
   ) {
     const hasAccess = user?.role === Role.ADMIN;
 
     return this.travelsService.findAll({
       publicOnly: !hasAccess,
       limit,
+      skip,
     });
   }
 
