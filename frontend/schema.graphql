@@ -1,0 +1,176 @@
+type Tour {
+  _id: ID!
+  title: String!
+  from: String!
+  to: String!
+  price: Int!
+  travelId: ID!
+  id: String!
+}
+
+type ImageFile {
+  url: String!
+  filename: String!
+  originalname: String!
+}
+
+type Travel {
+  _id: ID!
+  title: String!
+  description: String!
+  duration: Int!
+  images: [ImageFile!]!
+  slug: String!
+  public: Boolean!
+  tours: [Tour]!
+  id: String!
+}
+
+type User {
+  _id: ID!
+  name: String!
+  email: String!
+  password: String!
+  role: String!
+  refreshToken: String!
+  id: String!
+}
+
+type LoginUserResponse {
+  accessToken: String!
+}
+
+type Query {
+  travels(limit: Int): [Travel!]!
+  travel(id: String!): Travel!
+  travelBySlug(slug: String!): Travel
+  tours: [Tour!]!
+  tour(id: Int!): Tour!
+  users: [User!]!
+  user(id: Int!): User!
+  whoAmI: User!
+}
+
+type Mutation {
+  createTravel(createTravelInput: CreateTravelInput!): Travel!
+  updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
+  removeTravel(id: ID!): Travel!
+  createTour(createTourInput: CreateTourInput!): Tour!
+  updateTour(updateTourInput: UpdateTourInput!): Tour!
+  removeTour(id: ID!): Tour!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  login(loginUserInput: LoginUserInput!): LoginUserResponse!
+  logout: Boolean!
+}
+
+input CreateTravelInput {
+  # Travel title
+  title: String!
+
+  # Travel description
+  description: String!
+
+  # Travel duration
+  duration: Int!
+
+  # Travel UploadedImages
+  UploadedImages: [UploadedImage!]!
+
+  # Travel public
+  public: Boolean!
+}
+
+input UploadedImage {
+  url: String!
+  filename: String!
+  originalname: String!
+}
+
+input UpdateTravelInput {
+  # Travel title
+  title: String
+
+  # Travel description
+  description: String
+
+  # Travel duration
+  duration: Int
+
+  # Travel UploadedImages
+  UploadedImages: [UploadedImage!]
+
+  # Travel public
+  public: Boolean
+  id: ID!
+}
+
+input CreateTourInput {
+  # Tour title
+  title: String!
+
+  # Tour price
+  price: Int!
+
+  # Tour start date
+  from: String!
+
+  # Tour end date
+  to: String!
+
+  # Travel ID
+  travelId: ID!
+}
+
+input UpdateTourInput {
+  # Tour title
+  title: String
+
+  # Tour price
+  price: Int
+
+  # Tour start date
+  from: String
+
+  # Tour end date
+  to: String
+
+  # Travel ID
+  travelId: ID
+  id: Int!
+}
+
+input CreateUserInput {
+  # Name of the user
+  name: String!
+
+  # Email of the user
+  email: String!
+
+  # Password of the user
+  password: String!
+
+  # Role of the user
+  role: String
+}
+
+input UpdateUserInput {
+  # Name of the user
+  name: String
+
+  # Email of the user
+  email: String
+
+  # Password of the user
+  password: String
+
+  # Role of the user
+  role: String
+  id: Int!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}

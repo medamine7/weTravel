@@ -11,7 +11,14 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       REST_HOST: "",
-      GRAPHQL_HOST: "",
+    },
+  },
+  "graphql-client": {
+    clients: {
+      default: {
+        host: `${process.env.GQL_HOST}`,
+        schema: "./schema.graphql",
+      },
     },
   },
   formkit: {
@@ -20,7 +27,7 @@ export default defineNuxtConfig({
     configFile: "./formkit.config.ts",
   },
   devServer: {
-    port: 3001,
+    port: +(process.env.PORT || 3001),
   },
   imports: {
     dirs: ["stores"],

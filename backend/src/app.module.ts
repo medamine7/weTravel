@@ -8,7 +8,7 @@ import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JWTAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
@@ -18,19 +18,24 @@ import { AppController } from './app.controller';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost:27017/nest', {
-      connectionFactory: (connection) => {
-        connection.plugin((Schema) => {
-          Schema.virtual('id').get(function () {
-            return this._id.toHexString();
-          });
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get<string>('MONGODB_URI'),
+        connectionFactory: (connection) => {
+          connection.plugin((Schema) => {
+            Schema.virtual('id').get(function () {
+              return this._id.toHexString();
+            });
 
-          Schema.set('toJSON', {
-            virtuals: true,
+            Schema.set('toJSON', {
+              virtuals: true,
+            });
           });
-        });
-        return connection;
-      },
+          return connection;
+        },
+      }),
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
