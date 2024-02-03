@@ -41,7 +41,7 @@
   const errors = ref<string[]>([]);
   const authStore = useAuthStore();
 
-  const setUserData = async (token: string) => {
+  const setUserData = async (tokens: { access: string; refresh: string }) => {
     const { whoAmI: user } = await GqlWhoAmI();
     authStore.updateAuth({
       user: {
@@ -49,7 +49,7 @@
         email: user.email,
         role: user.role as UserRole,
       },
-      token,
+      tokens,
     });
   };
 
@@ -64,7 +64,10 @@
     })
       .then(async (result) => {
         useGqlToken(result.login.accessToken);
-        await setUserData(result.login.accessToken);
+        await setUserData({
+          access: result.login.accessToken,
+          refresh: result.login.refreshToken,
+        });
         navigateTo("/travels");
       })
       .catch((error) => {

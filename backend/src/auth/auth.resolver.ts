@@ -5,6 +5,8 @@ import { LoginUserInput } from './dto/login-user.input';
 import { UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './decorators/public.decorator';
+import { CurrentUser } from 'src/users/decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -18,7 +20,22 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  logout() {
-    return this.authService.logout();
+  logout(@CurrentUser() user: User) {
+    return this.authService.logout(user.id);
+  }
+
+  @Public()
+  @Mutation(() => LoginUserResponse)
+  async refresh(@Args('refreshToken') refreshToken: string) {
+    const newToken = await this.authService.refresh(refreshToken);
+
+    if (!newToken) {
+      throw new Error('Invalid refresh token');
+    }
+
+    return {
+      accessToken: newToken,
+      refreshToken,
+    };
   }
 }

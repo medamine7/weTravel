@@ -15,7 +15,6 @@ export class AuthService {
 
   async login(loginUserInput: LoginUserInput) {
     const user = await this.userService.findByEmail(loginUserInput.email);
-    const expiresIn = this.configService.get('ACCESS_TOKEN_EXPIRATION');
 
     const payload = {
       sub: user.id,
@@ -23,17 +22,34 @@ export class AuthService {
       role: user.role,
     };
 
-    const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn,
-    });
+    const accessToken = await this.generateAccessToken(payload);
+    const refreshToken = await this.generateRefreshToken(payload);
+
+    this.userService.setRefreshToken(user.id, refreshToken);
 
     return {
       accessToken,
+      refreshToken,
     };
   }
 
-  async logout() {
-    return true;
+  async refresh(refreshToken: string) {
+    const user = await this.userService.findByRefreshToken(refreshToken);
+
+    if (!user) return null;
+
+    const payload = this.jwtService.verify(refreshToken);
+    delete payload.exp;
+    delete payload.iat;
+    const token = await this.generateAccessToken(payload);
+
+    await this.userService.setRefreshToken(payload.sub, refreshToken);
+
+    return token;
+  }
+
+  async logout(userId: string) {
+    return this.userService.revokeRefreshToken(userId);
   }
 
   async validateUser(loginUserInput: LoginUserInput) {
@@ -50,5 +66,20 @@ export class AuthService {
 
     delete user.password;
     return user;
+  }
+
+  private async generateAccessToken(payload: any) {
+    const expiresIn = this.configService.get('ACCESS_TOKEN_EXPIRATION');
+
+    return this.jwtService.signAsync(payload, {
+      expiresIn,
+    });
+  }
+
+  private async generateRefreshToken(payload: any) {
+    const expiresIn = this.configService.get('REFRESH_TOKEN_EXPIRATION');
+    return this.jwtService.signAsync(payload, {
+      expiresIn,
+    });
   }
 }

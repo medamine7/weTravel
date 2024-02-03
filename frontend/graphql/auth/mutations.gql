@@ -1,5 +1,17 @@
 mutation Login($input: LoginUserInput!) {
   login(loginUserInput: $input) {
     accessToken
+    refreshToken
+  }
+}
+
+mutation Logout {
+  logout
+}
+
+mutation RefreshToken($refreshToken: String!) {
+  refresh(refreshToken: $refreshToken) {
+    accessToken
+    refreshToken
   }
 }

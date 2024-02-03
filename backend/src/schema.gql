@@ -53,6 +53,7 @@ type FindAllResponse {
 
 type LoginUserResponse {
   accessToken: String!
+  refreshToken: String!
 }
 
 type Query {
@@ -78,6 +79,7 @@ type Mutation {
   removeUser(id: Int!): User!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   logout: Boolean!
+  refresh(refreshToken: String!): LoginUserResponse!
 }
 
 input CreateTravelInput {

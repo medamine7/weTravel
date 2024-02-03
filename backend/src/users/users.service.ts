@@ -44,6 +44,20 @@ export class UsersService {
     return this.userModel.findOne({ email }).exec();
   }
 
+  setRefreshToken(userId: string, refreshToken: string) {
+    return this.userModel.updateOne({ _id: userId }, { refreshToken }).exec();
+  }
+
+  revokeRefreshToken(userId: string) {
+    return this.userModel
+      .updateOne({ _id: userId }, { refreshToken: null })
+      .exec();
+  }
+
+  findByRefreshToken(refreshToken: string): Promise<User> {
+    return this.userModel.findOne({ refreshToken }).exec();
+  }
+
   async seed() {
     const users = [
       {

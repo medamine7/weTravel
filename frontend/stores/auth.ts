@@ -2,17 +2,23 @@ import { defineStore } from "pinia";
 import type { User } from "~/types/user";
 
 export interface AuthState {
-  token: string | null;
+  tokens: {
+    access: string | null;
+    refresh: string | null;
+  };
   user: User | null;
 }
 
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
-    token: null,
+    tokens: {
+      access: null,
+      refresh: null,
+    },
     user: null,
   }),
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isLoggedIn: (state) => !!state.tokens.access && !!state.tokens.refresh,
     userRole: (state) => state.user?.role,
   },
   actions: {
@@ -20,6 +26,15 @@ export const useAuthStore = defineStore("auth", {
       this.$patch({
         ...this.$state,
         ...data,
+      });
+    },
+
+    updateTokens(tokens: Partial<AuthState["tokens"]>) {
+      this.updateAuth({
+        tokens: {
+          ...this.$state.tokens,
+          ...tokens,
+        },
       });
     },
   },

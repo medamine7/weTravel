@@ -1,5 +1,8 @@
 export default defineNuxtPlugin(() => {
-  useGqlError((err) => {
+  useGqlError(async (err: any) => {
+    const authStore = useAuthStore();
+    const router = useRouter();
+
     // Only log during development
     if (process.env.NODE_ENV !== "production") {
       for (const gqlError of err.gqlErrors) {
@@ -13,9 +16,22 @@ export default defineNuxtPlugin(() => {
       }
     }
 
-    // Handle different error cases
-    // const unauthorized = err.gqlErrors.some(e => e.message.includes('invalid-claims') || e.message.includes('insufficient-permission'))
-    console.log(err);
-    // take action accordingly...
+    const tokenExpired =
+      err.gqlErrors.some((e: any) => e.message.includes("Unauthorized")) &&
+      authStore.tokens.refresh;
+
+    if (tokenExpired) {
+      const newToken = await GqlRefreshToken({
+        refreshToken: authStore.tokens.refresh as string,
+      });
+
+      authStore.updateTokens({
+        access: newToken.refresh.accessToken,
+      });
+
+      useGqlToken(newToken.refresh.accessToken);
+
+      router.go(0);
+    }
   });
 });
