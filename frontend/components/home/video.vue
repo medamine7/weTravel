@@ -5,7 +5,7 @@
     >
       <div class="w-full pb-[56.25%] overflow-hidden">
         <iframe
-          class="pointer-events-none absolute z-0 top-0 w-full h-full"
+          class="pointer-events-none absolute z-0 top-0 w-full h-full scale-125"
           frameborder="0"
           allowfullscreen
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"

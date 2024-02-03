@@ -5,6 +5,7 @@ import { Tour } from './entities/tour.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TravelsService } from 'src/travels/travels.service';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ToursService {
@@ -39,5 +40,46 @@ export class ToursService {
 
   remove(id: string): Promise<Tour> {
     return this.tourModel.findByIdAndDelete(id).exec();
+  }
+
+  async seed() {
+    const travels = await this.travelService.findAll();
+
+    if (!travels?.items?.length) {
+      return;
+    }
+
+    for (let i = 0; i < travels.count; i++) {
+      const travel = travels.items[i];
+      const tours = [
+        {
+          title: travel.title + ' - Tour 1',
+          price: faker.number.int({ min: 100, max: 300 }),
+          travelId: travel._id,
+          from: faker.date.soon({ days: 2 }),
+          to: faker.date.soon({ days: 5 }),
+        },
+        {
+          title: travel.title + ' - Tour 2',
+          price: faker.number.int({ min: 100, max: 300 }),
+          travelId: travel._id,
+          from: faker.date.soon({ days: 7 }),
+          to: faker.date.soon({ days: 10 }),
+        },
+        {
+          title: travel.title + ' - Tour 3',
+          price: faker.number.int({ min: 100, max: 300 }),
+          travelId: travel._id,
+          from: faker.date.soon({ days: 20 }),
+          to: faker.date.soon({ days: 25 }),
+        },
+      ];
+
+      const items = await this.tourModel.insertMany(tours);
+
+      for (const item of items) {
+        await this.travelService.addTour(travel.id, item.id);
+      }
+    }
   }
 }

@@ -5,12 +5,18 @@
 type Tour {
   _id: ID!
   title: String!
-  from: String!
-  to: String!
+  from: DateTime!
+  to: DateTime!
   price: Int!
+  createdAt: DateTime!
   travelId: ID!
   id: String!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type ImageFile {
   url: String!
@@ -26,15 +32,10 @@ type Travel {
   images: [ImageFile!]!
   slug: String!
   public: Boolean!
-  tours: [Tour]!
+  tours: [Tour!]!
   createdAt: DateTime!
   id: String!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type User {
   _id: ID!
@@ -78,7 +79,7 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
-  logout: Boolean!
+  logout: String!
   refresh(refreshToken: String!): LoginUserResponse!
 }
 

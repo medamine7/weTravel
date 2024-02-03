@@ -13,7 +13,7 @@
     </div>
     <div class="mt-2 hover:underline">
       <h4 class="text-primary line-clamp-2 font-bold">{{ item.title }}</h4>
-      <p v-if="item.subtitle" class="text-sm text-gray-400">
+      <p v-if="item.subtitle" class="text-sm text-gray-400 line-clamp-3">
         {{ item.subtitle }}
       </p>
     </div>

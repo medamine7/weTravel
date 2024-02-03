@@ -19,9 +19,11 @@ export class AuthResolver {
     return this.authService.login(loginUserInput);
   }
 
-  @Mutation(() => Boolean)
-  logout(@CurrentUser() user: User) {
-    return this.authService.logout(user.id);
+  @Mutation(() => String)
+  async logout(@CurrentUser() user: User) {
+    await this.authService.logout(user.id);
+
+    return 'Logged out successfully';
   }
 
   @Public()

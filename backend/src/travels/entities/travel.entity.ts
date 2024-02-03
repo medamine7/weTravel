@@ -47,7 +47,7 @@ export class Travel {
   @Prop({ default: false })
   public?: boolean;
 
-  @Field(() => [Tour], { nullable: 'items' })
+  @Field(() => [Tour], { nullable: false })
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Tour' }] })
   tours?: Tour[] | MongooseSchema.Types.ObjectId[];
 

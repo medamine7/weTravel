@@ -11,5 +11,6 @@ import { TravelsModule } from 'src/travels/travels.module';
     MongooseModule.forFeature([{ name: Tour.name, schema: TourSchema }]),
     TravelsModule,
   ],
+  exports: [ToursService],
 })
 export class ToursModule {}

@@ -55,7 +55,7 @@ export class TravelsService {
   findOne(id: string, options?: FindOneOptions): Promise<Travel> {
     const { publicOnly } = options || {};
 
-    let query = this.travelModel.findById(id);
+    let query = this.travelModel.findById(id).populate('tours');
 
     if (publicOnly) {
       query = query.where({ public: true });
@@ -70,7 +70,7 @@ export class TravelsService {
   ): Promise<Travel | null> {
     const { publicOnly } = options || {};
 
-    let query = this.travelModel.findOne({ slug });
+    let query = this.travelModel.findOne({ slug }).populate('tours');
 
     if (publicOnly) {
       query = query.where({ public: true });

@@ -20,6 +20,13 @@ query getTravelBySlug($slug: String!) {
     id
     title
     description
+    tours {
+      id
+      title
+      price
+      from
+      to
+    }
     images {
       url
       originalname

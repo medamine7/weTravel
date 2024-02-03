@@ -2,12 +2,14 @@ import { Controller, Get, Param, Req, Res } from '@nestjs/common';
 import { Public } from './auth/decorators/public.decorator';
 import { UsersService } from './users/users.service';
 import { TravelsService } from './travels/travels.service';
+import { ToursService } from './tours/tours.service';
 
 @Controller()
 export class AppController {
   constructor(
     private usersService: UsersService,
     private travelsService: TravelsService,
+    private toursService: ToursService,
   ) {}
 
   @Public()
@@ -31,6 +33,8 @@ export class AppController {
     await this.travelsService.seed({
       request,
     });
+
+    await this.toursService.seed();
 
     return res.send({
       message: 'Seed completed',

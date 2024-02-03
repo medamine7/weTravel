@@ -14,17 +14,21 @@ export class Tour {
   @Prop()
   title: string;
 
-  @Field(() => String)
+  @Field(() => Date)
   @Prop()
-  from: string;
+  from: Date;
 
-  @Field(() => String)
+  @Field(() => Date)
   @Prop()
-  to: string;
+  to: Date;
 
   @Field(() => Int)
   @Prop()
   price: number;
+
+  @Field(() => Date)
+  @Prop({ default: Date.now })
+  createdAt: Date;
 
   @Field(() => ID)
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Travel' })

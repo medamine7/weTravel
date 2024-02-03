@@ -28,8 +28,8 @@ export class User {
   role: Role;
 
   @Field(() => String)
-  @Prop()
-  refreshToken: string;
+  @Prop({ default: null, nullable: true })
+  refreshToken: string | null;
 
   // for easier access to the id (virtual property)
   @Field(() => String)

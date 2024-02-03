@@ -1,6 +1,6 @@
 <template>
-  <layout-navbar v-bind="navProps" />
-  <main class="w-full flex-1 flex flex-col justify-start">
+  <main class="w-full flex-1 flex flex-col justify-start relative">
+    <layout-navbar v-bind="navProps" />
     <slot />
   </main>
   <layout-footer />
