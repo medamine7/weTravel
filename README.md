@@ -1,3 +1,7 @@
+<p align="center">
+<img src="./frontend/public/logo.png" width="160" />
+</p>
+
 # WeTravel
 
 A dockerized full stack app with a Nuxt frontend, Nest.js backend, and GraphQL.
