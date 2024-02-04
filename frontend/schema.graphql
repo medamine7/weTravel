@@ -1,12 +1,16 @@
 type Tour {
   _id: ID!
   title: String!
-  from: String!
-  to: String!
+  from: DateTime!
+  to: DateTime!
   price: Int!
+  createdAt: DateTime!
   travelId: ID!
   id: String!
 }
+
+# A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+scalar DateTime
 
 type ImageFile {
   url: String!
@@ -22,7 +26,8 @@ type Travel {
   images: [ImageFile!]!
   slug: String!
   public: Boolean!
-  tours: [Tour]!
+  tours: [Tour!]!
+  createdAt: DateTime!
   id: String!
 }
 
@@ -36,12 +41,18 @@ type User {
   id: String!
 }
 
+type FindAllResponse {
+  items: [Travel!]!
+  count: Int!
+}
+
 type LoginUserResponse {
   accessToken: String!
+  refreshToken: String!
 }
 
 type Query {
-  travels(limit: Int): [Travel!]!
+  travels(limit: Int, skip: Int): FindAllResponse!
   travel(id: String!): Travel!
   travelBySlug(slug: String!): Travel
   tours: [Tour!]!
@@ -62,7 +73,8 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
-  logout: Boolean!
+  logout: String!
+  refresh(refreshToken: String!): LoginUserResponse!
 }
 
 input CreateTravelInput {
@@ -76,7 +88,7 @@ input CreateTravelInput {
   duration: Int!
 
   # Travel UploadedImages
-  UploadedImages: [UploadedImage!]!
+  images: [UploadedImage!]!
 
   # Travel public
   public: Boolean!
@@ -99,7 +111,7 @@ input UpdateTravelInput {
   duration: Int
 
   # Travel UploadedImages
-  UploadedImages: [UploadedImage!]
+  images: [UploadedImage!]
 
   # Travel public
   public: Boolean
