@@ -62,9 +62,12 @@
   ];
 
   const onSignout = async () => {
-    await GqlLogout();
-    useGqlToken(null);
-    authState.$reset();
-    navigateTo("/");
+    await GqlLogout()
+      .catch(() => {})
+      .finally(() => {
+        useGqlToken(null);
+        authState.$reset();
+        navigateTo("/");
+      });
   };
 </script>

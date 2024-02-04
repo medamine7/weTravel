@@ -1,8 +1,8 @@
 import { CreateTourInput } from './create-tour.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateTourInput extends PartialType(CreateTourInput) {
-  @Field(() => Int)
+  @Field(() => String, { description: 'Tour ID' })
   id: string;
 }

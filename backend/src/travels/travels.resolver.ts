@@ -40,8 +40,8 @@ export class TravelsResolver {
 
   @Query(() => Travel, { name: 'travel' })
   findOne(
-    @CurrentUser() user: User,
     @Args('id', { type: () => String }) id: string,
+    @CurrentUser() user?: User,
   ) {
     const hasAccess = user?.role === Role.ADMIN;
 

@@ -2,68 +2,113 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TravelsResolver } from './travels.resolver';
 import { TravelsService } from './travels.service';
 import { CreateTravelInput } from './dto/create-travel.input';
-import { Travel } from './entities/travel.entity';
-import { User } from 'src/users/entities/user.entity';
+import * as mongoose from 'mongoose';
+import { UpdateTravelInput } from './dto/update-travel.input';
+import { faker } from '@faker-js/faker';
+
+const createTravelInput: CreateTravelInput = {
+  title: faker.lorem.sentence(),
+  description: faker.lorem.paragraph(),
+  duration: faker.number.int(),
+  images: [
+    {
+      url: faker.image.url(),
+      filename: faker.system.fileName(),
+      originalname: faker.system.fileName(),
+    },
+  ],
+};
+
+const travelId = new mongoose.Types.ObjectId();
+const updateTravelInput: UpdateTravelInput = {
+  id: travelId.toString(),
+  title: faker.lorem.sentence(),
+};
+
 describe('TravelsResolver', () => {
   let resolver: TravelsResolver;
-  let travelsService: TravelsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TravelsResolver, TravelsService],
+      providers: [
+        TravelsResolver,
+        {
+          provide: TravelsService,
+          useValue: {
+            create: jest.fn(() => {
+              return {
+                _id: travelId,
+                ...createTravelInput,
+              };
+            }),
+            findAll: jest.fn(() => {
+              return [
+                {
+                  _id: travelId,
+                  ...createTravelInput,
+                },
+              ];
+            }),
+            getTravels: jest.fn(() => {
+              return {
+                travels: [
+                  {
+                    _id: travelId,
+                    ...createTravelInput,
+                  },
+                ],
+                count: 1,
+              };
+            }),
+            findOne: jest.fn(() => {
+              return {
+                _id: travelId,
+                ...createTravelInput,
+              };
+            }),
+            update: jest.fn(() => {
+              return {
+                _id: travelId,
+                ...createTravelInput,
+                ...updateTravelInput,
+              };
+            }),
+            remove: jest.fn(() => {
+              return {};
+            }),
+          },
+        },
+      ],
     }).compile();
 
     resolver = module.get<TravelsResolver>(TravelsResolver);
-    travelsService = module.get<TravelsService>(TravelsService);
   });
 
   it('should be defined', () => {
     expect(resolver).toBeDefined();
   });
 
-  describe('createTravel', () => {
-    it('should create a new travel', async () => {
-      const createTravelInput: CreateTravelInput = {
-        // Provide the necessary input values for creating a travel
-      };
-
-      const createdTravel: Travel = {
-        // Provide the expected created travel object
-      };
-
-      jest
-        .spyOn(travelsService, 'createTravel')
-        .mockResolvedValue(createdTravel);
-
-      const result = await resolver.createTravel(createTravelInput);
-
-      expect(result).toEqual(createdTravel);
-      expect(travelsService.createTravel).toHaveBeenCalledWith(
-        createTravelInput,
-      );
-    });
+  it('should be able to create an travel', async () => {
+    const travel = await resolver.createTravel(createTravelInput);
+    expect(travel._id).toBeDefined();
+    expect(travel._id).toBe(travelId);
+    expect(travel.title).toBe(createTravelInput.title);
+    expect(travel.description).toBe(createTravelInput.description);
+    expect(travel.duration).toBe(createTravelInput.duration);
+    expect(travel.images).toStrictEqual(createTravelInput.images);
   });
-
-  describe('findAll', () => {
-    it('should return an array of travels', async () => {
-      const user: User = {
-        // Provide the necessary user object
-      };
-
-      const limit = 10;
-
-      const travels: Travel[] = [
-        // Provide the expected array of travels
-      ];
-
-      jest.spyOn(travelsService, 'findAll').mockResolvedValue(travels);
-
-      const result = await resolver.findAll(user, limit);
-
-      expect(result).toEqual(travels);
-      expect(travelsService.findAll).toHaveBeenCalledWith(user, limit);
-    });
+  it('should be able to find one travel by id', async () => {
+    const travel = await resolver.findOne(travelId.toString());
+    expect(travel).toBeDefined();
+    expect(travel._id).toBe(travelId);
   });
-
-  // Add more test cases for other resolver methods
+  it('should be able to test updateTravel ', async () => {
+    const updatedTravel = await resolver.updateTravel(updateTravelInput);
+    expect(updatedTravel).toBeDefined();
+    expect(updatedTravel.title).toBe(updateTravelInput.title);
+  });
+  it('should be able to test removeTravel ', async () => {
+    const removedTravel = await resolver.removeTravel(travelId.toString());
+    expect(removedTravel).toBeDefined();
+  });
 });
