@@ -1,6 +1,6 @@
 import { UserRole } from "~/types/user";
 
-type Resource = "travels";
+type Resource = "travels" | "tours";
 type Action = "read" | "write" | "delete";
 
 interface Permissions {
@@ -16,6 +16,10 @@ export function hasPermission(
 ): boolean {
   const permissions: Permissions = {
     travels: {
+      [UserRole.USER]: ["read"],
+      [UserRole.ADMIN]: ["read", "write", "delete"],
+    },
+    tours: {
       [UserRole.USER]: ["read"],
       [UserRole.ADMIN]: ["read", "write", "delete"],
     },

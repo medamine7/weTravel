@@ -45,7 +45,7 @@
       validation="required"
       placeholder="Price"
       validation-visibility="submit"
-      :value="defaultValues.price"
+      :value="`${defaultValues.price}`"
       step="1"
     />
   </FormKit>

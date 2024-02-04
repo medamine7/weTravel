@@ -2,7 +2,7 @@
   <x-container v-if="data" class="pt-12">
     <div class="flex justify-between items-start gap-6 flex-wrap">
       <h2 class="text-4xl font-bold max-w-2xl">{{ data.title }}</h2>
-      <div class="flex gap-4 items-center flex-shrink-0" v-if="canEdit">
+      <div class="flex gap-4 items-center flex-shrink-0" v-if="canEditTravel">
         <x-button
           kind="danger"
           icon="heroicons:x-mark"
@@ -36,7 +36,7 @@
         data-drawer-target="wt-drawer-tour"
         data-drawer-toggle="wt-drawer-tour"
         data-drawer-placement="right"
-        v-if="canEdit"
+        v-if="canEditTravel"
         >Add tour</x-button
       >
     </div>
@@ -46,7 +46,7 @@
       v-if="data.tours.length"
       @delete="onDeleteTour"
     >
-      <template v-slot:actions="{ index }" v-if="canEdit">
+      <template v-slot:actions="{ index }" v-if="canDeleteTour">
         <a
           href="#"
           class="font-medium text-red-600 hover:underline"
@@ -60,7 +60,7 @@
       *No tours available at the moment*
     </h4>
   </x-container>
-  <x-dialog v-if="canEdit">
+  <x-dialog v-if="canEditTravel">
     <Icon name="heroicons:exclamation-triangle" size="64px" />
 
     <h3 class="my-5 text-lg font-normal text-gray-500 dark:text-gray-400">
@@ -75,7 +75,7 @@
       </x-button>
     </div>
   </x-dialog>
-  <x-drawer v-if="canEdit && data">
+  <x-drawer v-if="canEditTravel && data">
     <travel-form @submit="onEdit" :data="data">
       <template v-slot:header>
         <Icon name="maki:beach" />
@@ -84,8 +84,8 @@
     </travel-form>
   </x-drawer>
 
-  <x-drawer v-if="canEdit" id="wt-drawer-tour">
-    <tour-form @submit="onAddTour" :data="activeTour">
+  <x-drawer v-if="canEditTravel" id="wt-drawer-tour">
+    <tour-form @submit="onAddTour">
       <template v-slot:header>
         <Icon name="heroicons:plus" />
         <span class="ml-2"> Add tour </span>
@@ -120,8 +120,6 @@
   const authState = useAuthStore();
   const { $api } = useNuxtApp();
 
-  const activeTour = ref(null);
-
   const { data, refresh } = await useAsyncGql({
     operation: "getTravelBySlug",
     variables: {
@@ -134,12 +132,16 @@
 
   if (!data.value) throw new Error("Travel not found");
 
-  const canEdit = computed(() =>
+  const canEditTravel = computed(() =>
     hasPermission(authState.userRole, "travels", "write"),
   );
 
+  const canDeleteTour = computed(() =>
+    hasPermission(authState.userRole, "tours", "delete"),
+  );
+
   const onEdit = async (payload: EditPayload) => {
-    if (!canEdit) return;
+    if (!canEditTravel) return;
 
     const hasNewImages = payload.images?.some(Boolean);
     let images: UploadedImage[] = [];
@@ -168,7 +170,7 @@
   };
 
   const onDelete = async () => {
-    if (!canEdit) return;
+    if (!canEditTravel) return;
 
     await GqlRemoveTravel({
       id: data.value!.id,
@@ -178,7 +180,7 @@
   };
 
   const onAddTour = async (payload: TourPayload) => {
-    if (!canEdit) return;
+    if (!canEditTravel) return;
 
     const { createTour: newTour } = await GqlCreateTour({
       input: {
@@ -197,7 +199,7 @@
   };
 
   const onDeleteTour = async (index: number) => {
-    if (!canEdit) return;
+    if (!canEditTravel) return;
 
     const tour = data.value!.tours[index];
     await GqlRemoveTour({
