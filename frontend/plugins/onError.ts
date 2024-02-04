@@ -20,6 +20,14 @@ export default defineNuxtPlugin(() => {
       err.gqlErrors.some((e: any) => e.message.includes("Unauthorized")) &&
       authStore.tokens.refresh;
 
+    const invalidRefreshToken = err.gqlErrors.some((e: any) => e.message.includes("Invalid refresh token"));
+
+    if (invalidRefreshToken) {
+      authStore.$reset();
+      useGqlToken(null);
+      navigateTo("/login");
+    }
+
     if (tokenExpired) {
       const newToken = await GqlRefreshToken({
         refreshToken: authStore.tokens.refresh as string,
